@@ -49,6 +49,10 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // Visualizer Settings
   let dotSpacing = 30;
   let baseDotSize = 8;
+
+  let overallVolume = (vocal + drum + bass + other) / 4;
+  let mappedDotSize = map(overallVolume, 0, 100, baseDotSize, baseDotSize * 2.5);
+  
   
   // Dot grid
   // Loop through columns
@@ -61,7 +65,7 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
       // Each dot drawn here
       fill(255); // A simple white color for now
-      ellipse(x, y, baseDotSize, baseDotSize);
+      ellipse(x, y, mappedDotSize, mappedDotSize);
     }
   }
 }
