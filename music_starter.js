@@ -41,7 +41,6 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // Bg colour
   background(100);
 
-  // Set the color mode to RGB with a range of 255
   // Colour mode set to RGB, and no stroke for dots
   colorMode(RGB, 255);
   noStroke();
@@ -49,23 +48,29 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // Visualizer Settings
   let dotSpacing = 30;
   let baseDotSize = 8;
-
-  let overallVolume = (vocal + drum + bass + other) / 4;
-  let mappedDotSize = map(overallVolume, 0, 100, baseDotSize, baseDotSize * 2.5);
+  let sectionWidth = width / 4;
   
-  
-  // Dot grid
+  // Dot grid now sectioned
   // Loop through columns
   for (let xIndex = 0; xIndex < width; xIndex += dotSpacing) {
     let x = xIndex + dotSpacing;
+    let maxColumnHeight = 0;
 
-    // Loop through rows
-    for (let yIndex = 0; yIndex < height; yIndex += dotSpacing) {
-      let y = yIndex + dotSpacing;
-
-      // Each dot drawn here
-      fill(255); // A simple white color for now
-      ellipse(x, y, mappedDotSize, mappedDotSize);
+   // Determine the height of the column based on the section 
+   if (x < sectionWidth) {
+      maxColumnHeight = map(vocal, 0, 100, 0, height / 2.5);
+    } else if (x < sectionWidth * 2) {
+      maxColumnHeight = map(drum, 0, 100, 0, height / 2.5);
+    } else if (x < sectionWidth * 3) {
+      maxColumnHeight = map(bass, 0, 100, 0, height / 2.5);
+    } else {
+      maxColumnHeight = map(other, 0, 100, 0, height / 2.5);
+    }
+      // Loop through rows
+      for (let y = height / 2; y >= height / 2 - maxColumnHeight; y -= dotSpacing) {
+      // Each dot drawn
+      fill(255);
+      ellipse(x, y, baseDotSize);
     }
   }
 }
