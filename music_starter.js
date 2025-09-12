@@ -40,4 +40,14 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
    textAlign(CENTER);
    textSize(vocal);
    text(words, width/2, height/3);
+  // Set the background color to a neutral gray
+  background(100);
+
+  // Set the color mode to RGB with a range of 255
+  colorMode(RGB, 255);
+  noStroke();
+
+  // Drew a circle in the center of the canvas
+  fill(255);
+  ellipse(width / 2, height / 2, 50, 50);
 }
