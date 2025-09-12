@@ -1,5 +1,6 @@
 
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
+// Dot Grid
 function draw_one_frame(words, vocal, drum, bass, other, counter) {
   background(20)
   textFont('Verdana'); // please use CSS safe fonts
@@ -36,18 +37,31 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
    text("other", bar_pos_x, height / 2 + 4 * bar_spacing + 8);
    fill(255, 255, 0);
  
-   // display "words"
-   textAlign(CENTER);
-   textSize(vocal);
-   text(words, width/2, height/3);
   // Set the background color to a neutral gray
+  // Bg colour
   background(100);
 
   // Set the color mode to RGB with a range of 255
+  // Colour mode set to RGB, and no stroke for dots
   colorMode(RGB, 255);
   noStroke();
 
-  // Drew a circle in the center of the canvas
-  fill(255);
-  ellipse(width / 2, height / 2, 50, 50);
+  // Visualizer Settings
+  let dotSpacing = 30;
+  let baseDotSize = 8;
+  
+  // Dot grid
+  // Loop through columns
+  for (let xIndex = 0; xIndex < width; xIndex += dotSpacing) {
+    let x = xIndex + dotSpacing;
+
+    // Loop through rows
+    for (let yIndex = 0; yIndex < height; yIndex += dotSpacing) {
+      let y = yIndex + dotSpacing;
+
+      // Each dot drawn here
+      fill(255); // A simple white color for now
+      ellipse(x, y, baseDotSize, baseDotSize);
+    }
+  }
 }
