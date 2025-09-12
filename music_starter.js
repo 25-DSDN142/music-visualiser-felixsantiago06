@@ -40,6 +40,8 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // Set the background color to a neutral gray
   // Bg colour
   background(100);
+  // Background white
+  background(255);
 
   // Colour mode set to RGB, and no stroke for dots
   colorMode(RGB, 255);
@@ -48,28 +50,38 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // Visualizer Settings
   let dotSpacing = 30;
   let baseDotSize = 8;
+
+  // four sections
   let sectionWidth = width / 4;
   
   // Dot grid now sectioned
   // Loop through columns
   for (let xIndex = 0; xIndex < width; xIndex += dotSpacing) {
     let x = xIndex + dotSpacing;
+
+    // Determines height and colour of the column based on what section it's in
     let maxColumnHeight = 0;
+    let fillColor;
 
    // Determine the height of the column based on the section 
    if (x < sectionWidth) {
+ if (x < sectionWidth) {
       maxColumnHeight = map(vocal, 0, 100, 0, height / 2.5);
+      fillColor = '#ec93d8'; // Pastel Pink
     } else if (x < sectionWidth * 2) {
       maxColumnHeight = map(drum, 0, 100, 0, height / 2.5);
+      fillColor = '#acec93'; // Pastel Green
     } else if (x < sectionWidth * 3) {
       maxColumnHeight = map(bass, 0, 100, 0, height / 2.5);
+      fillColor = '#93a8ec'; // Pastel Blue
     } else {
       maxColumnHeight = map(other, 0, 100, 0, height / 2.5);
+      fillColor = '#eccc93'; // Pastel Orangish Yellow
     }
       // Loop through rows
       for (let y = height / 2; y >= height / 2 - maxColumnHeight; y -= dotSpacing) {
       // Each dot drawn
-      fill(255);
+      fill(fillColor);
       ellipse(x, y, baseDotSize);
     }
   }
