@@ -1,3 +1,4 @@
+let noiseOffset = 0;
 
 // vocal, drum, bass, and other are volumes ranging from 0 to 100
 // Dot Grid
@@ -50,21 +51,22 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   // Visualizer Settings
   let dotSpacing = 30;
   let baseDotSize = 8;
+  let mappedDotSize = map((vocal + drum + bass + other) / 4, 0, 100, baseDotSize, baseDotSize * 2.5);
+  
 
   // four sections
   let sectionWidth = width / 4;
-  
+  let numDotsX = floor((width - 2 * dotSpacing) / dotSpacing) + 1;
   // Dot grid now sectioned
   // Loop through columns
-  for (let xIndex = 0; xIndex < width; xIndex += dotSpacing) {
-    let x = xIndex + dotSpacing;
-
-    // Determines height and colour of the column based on what section it's in
-    let maxColumnHeight = 0;
-    let fillColor;
+    for (let xIndex = 0; xIndex < numDotsX; xIndex++) {
+    let x = dotSpacing + xIndex * dotSpacing;
+    
+    // Using Perlin noise to add unique fluctuation to each column
+    let noiseVal = noise(xIndex * 0.1, noiseOffset);
+    let fluctuation = map(noiseVal, 0, 1, -50, 50);
 
    // Determine the height of the column based on the section 
-   if (x < sectionWidth) {
  if (x < sectionWidth) {
       maxColumnHeight = map(vocal, 0, 100, 0, height / 2.5);
       fillColor = '#ec93d8'; // Pastel Pink
@@ -79,10 +81,10 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
       fillColor = '#eccc93'; // Pastel Orangish Yellow
     }
       // Loop through rows
-      for (let y = height / 2; y >= height / 2 - maxColumnHeight; y -= dotSpacing) {
-      // Each dot drawn
+      for (let y = height / 2 - dotSpacing; y >= height / 2 - maxColumnHeight - fluctuation; y -= dotSpacing) {
       fill(fillColor);
       ellipse(x, y, baseDotSize);
     }
   }
+  noiseOffset += 0.006;
 }
