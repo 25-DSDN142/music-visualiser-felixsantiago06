@@ -50,8 +50,9 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
 
   // Visualizer Settings
   let dotSpacing = 30;
-  let baseDotSize = 8;
+  let baseDotSize = 9;
   let mappedDotSize = map((vocal + drum + bass + other) / 4, 0, 100, baseDotSize, baseDotSize * 2.5);
+  
   
 
   // four sections
@@ -64,7 +65,10 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
     
     // Using Perlin noise to add unique fluctuation to each column
     let noiseVal = noise(xIndex * 0.1, noiseOffset);
-    let fluctuation = map(noiseVal, 0, 1, -50, 50);
+    let fluctuation = map(noiseVal, 0, 0.6, -50, 50);
+
+    let maxColumnHeight = 0;
+    let fillColor;
 
    // Determine the height of the column based on the section 
  if (x < sectionWidth) {
@@ -83,8 +87,37 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
       // Loop through rows
       for (let y = height / 2 - dotSpacing; y >= height / 2 - maxColumnHeight - fluctuation; y -= dotSpacing) {
       fill(fillColor);
-      ellipse(x, y, baseDotSize);
+      ellipse(x, y, mappedDotSize);
     }
   }
+
+for (let xIndex = 0; xIndex < numDotsX; xIndex++) {
+  let x = dotSpacing + xIndex * dotSpacing;
+  let noiseVal = noise(xIndex * 0.1, noiseOffset);
+  let fluctuation = map(noiseVal, 0, 0.6, -50, 50);
+
+  let maxColumnHeight = 0;
+  let fillColor;
+
+  if (x < sectionWidth) {
+    maxColumnHeight = map(vocal, 0, 100, 0, height / 2.5);
+    fillColor = '#ec93d8'; // Pastel Pink
+  } else if (x < sectionWidth * 2) {
+    maxColumnHeight = map(drum, 0, 100, 0, height / 2.5);
+    fillColor = '#acec93'; // Pastel Green
+  } else if (x < sectionWidth * 3) {
+    maxColumnHeight = map(bass, 0, 100, 0, height / 2.5);
+    fillColor = '#93a8ec'; // Pastel Blue
+  } else {
+    maxColumnHeight = map(other, 0, 100, 0, height / 2.5);
+    fillColor = '#eccc93'; // Pastel Orangish Yellow
+  } 
+
+  for (let y = height / 2 + dotSpacing; y <= height / 2 + maxColumnHeight + fluctuation; y += dotSpacing) {
+    fill(fillColor);
+    ellipse(x, y, mappedDotSize);
+  }
+}
+
   noiseOffset += 0.006;
 }
