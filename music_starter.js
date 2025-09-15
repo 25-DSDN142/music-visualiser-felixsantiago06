@@ -1,7 +1,5 @@
 let noiseOffset = 0;
 
-// vocal, drum, bass, and other are volumes ranging from 0 to 100
-// Dot Grid
 function draw_one_frame(words, vocal, drum, bass, other, counter) {
   background(20)
   textFont('Verdana'); // please use CSS safe fonts
@@ -43,81 +41,74 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   background(100);
   // Background white
   background(255);
-
-  // Colour mode set to RGB, and no stroke for dots
   colorMode(RGB, 255);
   noStroke();
 
   // Visualizer Settings
   let dotSpacing = 30;
-  let baseDotSize = 9;
+  let baseDotSize = 8;
   let mappedDotSize = map((vocal + drum + bass + other) / 4, 0, 100, baseDotSize, baseDotSize * 2.5);
-  
-  
-
-  // four sections
   let sectionWidth = width / 4;
   let numDotsX = floor((width - 2 * dotSpacing) / dotSpacing) + 1;
-  // Dot grid now sectioned
-  // Loop through columns
-    for (let xIndex = 0; xIndex < numDotsX; xIndex++) {
+  
+  // Main Visualizer Loop with Reflection
+  for (let xIndex = 0; xIndex < numDotsX; xIndex++) {
     let x = dotSpacing + xIndex * dotSpacing;
-    
-    // Using Perlin noise to add unique fluctuation to each column
     let noiseVal = noise(xIndex * 0.1, noiseOffset);
-    let fluctuation = map(noiseVal, 0, 0.6, -50, 50);
-
+    let fluctuation = map(noiseVal, 0, 1, -50, 50);
     let maxColumnHeight = 0;
     let fillColor;
 
-   // Determine the height of the column based on the section 
- if (x < sectionWidth) {
-      maxColumnHeight = map(vocal, 0, 100, 0, height / 2.5);
-      fillColor = '#ec93d8'; // Pastel Pink
+    if (x < sectionWidth) {
+      maxColumnHeight = map(vocal, 0, 100, 0, height / 3);
+      fillColor = '#ec93d8';
     } else if (x < sectionWidth * 2) {
-      maxColumnHeight = map(drum, 0, 100, 0, height / 2.5);
-      fillColor = '#acec93'; // Pastel Green
+      maxColumnHeight = map(drum, 0, 100, 0, height / 3);
+      fillColor = '#acec93';
     } else if (x < sectionWidth * 3) {
-      maxColumnHeight = map(bass, 0, 100, 0, height / 2.5);
-      fillColor = '#93a8ec'; // Pastel Blue
+      maxColumnHeight = map(bass, 0, 100, 0, height / 3);
+      fillColor = '#93a8ec';
     } else {
-      maxColumnHeight = map(other, 0, 100, 0, height / 2.5);
-      fillColor = '#eccc93'; // Pastel Orangish Yellow
+      maxColumnHeight = map(other, 0, 100, 0, height / 3);
+      fillColor = '#eccc93';
     }
-      // Loop through rows
-      for (let y = height / 2 - dotSpacing; y >= height / 2 - maxColumnHeight - fluctuation; y -= dotSpacing) {
+
+    for (let y = height / 2 - dotSpacing; y >= height / 2 - maxColumnHeight - fluctuation; y -= dotSpacing) {
       fill(fillColor);
       ellipse(x, y, mappedDotSize);
     }
   }
 
-for (let xIndex = 0; xIndex < numDotsX; xIndex++) {
-  let x = dotSpacing + xIndex * dotSpacing;
-  let noiseVal = noise(xIndex * 0.1, noiseOffset);
-  let fluctuation = map(noiseVal, 0, 0.6, -50, 50);
+  // Reflection Visualizer Loop
+  for (let xIndex = 0; xIndex < numDotsX; xIndex++) {
+    let x = dotSpacing + xIndex * dotSpacing;
+    let noiseVal = noise(xIndex * 0.1, noiseOffset);
+    let fluctuation = map(noiseVal, 0, 0.6, -50, 50);
+    let maxColumnHeight = 0;
+    let fillColor;
 
-  let maxColumnHeight = 0;
-  let fillColor;
+    if (x < sectionWidth) {
+      maxColumnHeight = map(vocal, 0, 100, 0, height / 3);
+      fillColor = '#ec93d8';
+    } else if (x < sectionWidth * 2) {
+      maxColumnHeight = map(drum, 0, 100, 0, height / 3);
+      fillColor = '#acec93';
+    } else if (x < sectionWidth * 3) {
+      maxColumnHeight = map(bass, 0, 100, 0, height / 3);
+      fillColor = '#93a8ec';
+    } else {
+      maxColumnHeight = map(other, 0, 100, 0, height / 3);
+      fillColor = '#eccc93';
+    } 
 
-  if (x < sectionWidth) {
-    maxColumnHeight = map(vocal, 0, 100, 0, height / 2.5);
-    fillColor = '#ec93d8'; // Pastel Pink
-  } else if (x < sectionWidth * 2) {
-    maxColumnHeight = map(drum, 0, 100, 0, height / 2.5);
-    fillColor = '#acec93'; // Pastel Green
-  } else if (x < sectionWidth * 3) {
-    maxColumnHeight = map(bass, 0, 100, 0, height / 2.5);
-    fillColor = '#93a8ec'; // Pastel Blue
-  } else {
-    maxColumnHeight = map(other, 0, 100, 0, height / 2.5);
-    fillColor = '#eccc93'; // Pastel Orangish Yellow
-  } 
+    for (let y = height / 2 + dotSpacing; y <= height / 2 + maxColumnHeight + fluctuation; y += dotSpacing) {
+      let yOffset = y - height / 2;
+      let reflectionAlpha = map(yOffset, 0, height / 2, 70, 100);
 
-  for (let y = height / 2 + dotSpacing; y <= height / 2 + maxColumnHeight + fluctuation; y += dotSpacing) {
-    fill(fillColor);
-    ellipse(x, y, mappedDotSize);
+      fill(red(fillColor), green(fillColor), blue(fillColor), reflectionAlpha);
+      ellipse(x, y, mappedDotSize);
+    }
   }
-}
 
   noiseOffset += 0.006;
 }
