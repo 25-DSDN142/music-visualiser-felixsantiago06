@@ -1,4 +1,8 @@
 let noiseOffset = 0;
+let vocalStars = [];
+let drumStars = [];
+let bassStars = [];
+let otherStars = [];
 
 function draw_one_frame(words, vocal, drum, bass, other, counter) {
   background(20)
@@ -111,4 +115,111 @@ function draw_one_frame(words, vocal, drum, bass, other, counter) {
   }
 
   noiseOffset += 0.006;
+  
+  // star speed and generation based on volume
+  let starSpeedVocal = map(vocal, 0, 100, 0.5, 5);
+  let starSpeedDrum = map(drum, 0, 100, 0.5, 5);
+  let starSpeedBass = map(bass, 0, 100, 0.5, 5);
+  let starSpeedOther = map(other, 0, 100, 0.5, 5);
+  
+  // Add new stars based on volume
+  let newStarsVocal = floor(map(vocal, 0, 100, 0, 2));
+  let newStarsDrum = floor(map(drum, 0, 100, 0, 2));
+  let newStarsBass = floor(map(bass, 0, 100, 0, 2));
+  let newStarsOther = floor(map(other, 0, 100, 0, 2));
+
+  for (let i = 0; i < newStarsVocal; i++) {
+    vocalStars.push({
+      x: random(-width, width),
+      y: random(-height, height),
+      z: random(width),
+      color: '#ec93d8'
+    });
+  }
+  for (let i = 0; i < newStarsDrum; i++) {
+    drumStars.push({
+      x: random(-width, width),
+      y: random(-height, height),
+      z: random(width),
+      color: '#acec93'
+    });
+  }
+  for (let i = 0; i < newStarsBass; i++) {
+    bassStars.push({
+      x: random(-width, width),
+      y: random(-height, height),
+      z: random(width),
+      color: '#93a8ec'
+    });
+  }
+  for (let i = 0; i < newStarsOther; i++) {
+    otherStars.push({
+      x: random(-width, width),
+      y: random(-height, height),
+      z: random(width),
+      color: '#eccc93'
+    });
+  }
+
+  translate(width / 2, height / 2); // Move origin to center for the starfield
+  
+  // Animate and draw Vocal stars
+  for (let i = vocalStars.length - 1; i >= 0; i--) {
+    let star = vocalStars[i];
+    star.z = star.z - starSpeedVocal;
+    if (star.z < 1) {
+      vocalStars.splice(i, 1);
+      continue;
+    }
+    let sx = map(star.x / star.z, 0, 1, 0, width / 2);
+    let sy = map(star.y / star.z, 0, 1, 0, height / 2);
+    let r = map(star.z, 0, width, 16, 0);
+    fill(star.color);
+    ellipse(sx - width / 4, sy, r, r);
+  }
+
+  // Animate and draw Drum stars
+  for (let i = drumStars.length - 1; i >= 0; i--) {
+    let star = drumStars[i];
+    star.z = star.z - starSpeedDrum;
+    if (star.z < 1) {
+      drumStars.splice(i, 1);
+      continue;
+    }
+    let sx = map(star.x / star.z, 0, 1, 0, width / 2);
+    let sy = map(star.y / star.z, 0, 1, 0, height / 2);
+    let r = map(star.z, 0, width, 16, 0);
+    fill(star.color);
+    ellipse(sx + width / 4, sy, r, r);
+  }
+
+  // Animate and draw Bass stars
+  for (let i = bassStars.length - 1; i >= 0; i--) {
+    let star = bassStars[i];
+    star.z = star.z - starSpeedBass;
+    if (star.z < 1) {
+      bassStars.splice(i, 1);
+      continue;
+    }
+    let sx = map(star.x / star.z, 0, 1, 0, width / 2);
+    let sy = map(star.y / star.z, 0, 1, 0, height / 2);
+    let r = map(star.z, 0, width, 16, 0);
+    fill(star.color);
+    ellipse(sx - width / 4, sy, r, r);
+  }
+
+  // Animate and draw Other stars
+  for (let i = otherStars.length - 1; i >= 0; i--) {
+    let star = otherStars[i];
+    star.z = star.z - starSpeedOther;
+    if (star.z < 1) {
+      otherStars.splice(i, 1);
+      continue;
+    }
+    let sx = map(star.x / star.z, 0, 1, 0, width / 2);
+    let sy = map(star.y / star.z, 0, 1, 0, height / 2);
+    let r = map(star.z, 0, width, 16, 0);
+    fill(star.color);
+    ellipse(sx + width / 4, sy, r, r);
+  }
 }
